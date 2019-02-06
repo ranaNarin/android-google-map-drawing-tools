@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.android.gms:play-services-analytics:9.6.1@aar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../../android-sdk-macosx/gradle-3.3/caches/transforms-1/files-1.1/play-services-analytics-9.6.1.aar/a53815da577e3cb0462b214444ec8bc5/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../../../android-sdk-macosx/gradle-3.3/caches/transforms-1/files-1.1/play-services-analytics-9.6.1.aar/a53815da577e3cb0462b214444ec8bc5/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

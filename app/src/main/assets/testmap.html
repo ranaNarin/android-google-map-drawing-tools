@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drawing tools</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+        html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        }
+        #map {
+        height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+      // This example requires the Drawing library. Include the libraries=drawing
+      // parameter when you first load the API. For example:
+      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=drawing">
+
+
+    var circle;
+    var polygon;
+    var lat1=Android.getLat();
+    var log1=Android.getLog();
+    var map;
+    var infoWindow;
+     var selectedShape;
+     var flag;
+     var drawingManager;
+
+     function  setLatLong(lat, long)
+     {
+
+          map=null;
+          map = new google.maps.Map(document.getElementById('map'), {
+
+              center: {lat: lat, lng: long},
+              zoom: 16
+           });
+
+        flag=1;
+         var drawingManager = new google.maps.drawing.DrawingManager({
+             // drawingMode: google.maps.drawing.OverlayType.MARKER,
+              drawingControl: true,
+              drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER,
+                drawingModes: [
+                 // google.maps.drawing.OverlayType.MARKER,
+                  google.maps.drawing.OverlayType.CIRCLE,
+                  google.maps.drawing.OverlayType.POLYGON,
+                 // google.maps.drawing.OverlayType.POLYLINE,
+                  //google.maps.drawing.OverlayType.RECTANGLE
+                ]
+              },
+              markerOptions: {icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'},
+              circleOptions: {
+
+                fillColor: '#FF0000',
+                 fillOpacity: 0.35,
+                strokeColor: '#FF0000',
+                fillOpacity: 0.35,
+                strokeWeight: 2,
+                clickable: false,
+                editable: true,
+                zIndex: 1
+              },
+
+              polygonOptions: {
+              fillColor: '#FF0000',
+              fillOpacity: 0.35,
+              strokeColor: '#FF0000',
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              draggable: true,
+              editable: true,
+              zIndex: 1
+              }
+
+
+        });
+        drawingManager.setMap(map);
+
+         google.maps.event.addListener(drawingManager, "polygoncomplete", getPolygonCoords);
+         google.maps.event.addListener(drawingManager, "click", getPolygonCoords);
+
+
+         google.maps.event.addListener(drawingManager, 'circlecomplete', onCircleComplete);
+
+     }
+
+
+     function initMap() {
+
+            if(flag != 1)
+            {
+                 map = new google.maps.Map(document.getElementById('map'), {
+
+                     center: {lat: lat1, lng: log1},
+                      //center: {lat:38.88154,lng: -77.02880},
+                        zoom: 16
+                     });
+            }
+
+      }
+
+      function removePolygonTool()
+      {
+             drawingManager.setMap(null);
+      }
+
+      function showPolygonTool()
+      {
+
+             drawingManager = new google.maps.drawing.DrawingManager({
+                     // drawingMode: google.maps.drawing.OverlayType.MARKER,
+                      drawingControl: true,
+                      drawingControlOptions: {
+                        position: google.maps.ControlPosition.TOP_CENTER,
+                        drawingModes: [
+                         // google.maps.drawing.OverlayType.MARKER,
+                        //  google.maps.drawing.OverlayType.CIRCLE,
+                          google.maps.drawing.OverlayType.POLYGON,
+                         // google.maps.drawing.OverlayType.POLYLINE,
+                          //google.maps.drawing.OverlayType.RECTANGLE
+                        ]
+                      },
+                      markerOptions: {icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'},
+                      circleOptions: {
+
+                        fillColor: '#FF0000',
+                         fillOpacity: 0.35,
+                        strokeColor: '#FF0000',
+                        fillOpacity: 0.35,
+                        strokeWeight: 2,
+                        clickable: false,
+                        editable: true,
+                        zIndex: 1
+                      },
+
+                      polygonOptions: {
+                      fillColor: '#FF0000',
+                      fillOpacity: 0.35,
+                      strokeColor: '#FF0000',
+                      strokeOpacity: 0.8,
+                      strokeWeight: 2,
+                      draggable: true,
+                      editable: true,
+                      zIndex: 1
+                      }
+
+
+              });
+               drawingManager.setMap(map);
+
+                google.maps.event.addListener(drawingManager, "polygoncomplete", getPolygonCoords);
+                google.maps.event.addListener(drawingManager, "click", getPolygonCoords);
+                google.maps.event.addListener(drawingManager, 'circlecomplete', onCircleComplete);
+
+     }
+
+     function clrMap()
+     {
+            if (circle != null) {
+                circle.setMap(null);
+                circle = null;
+            }
+            if (polygon != null) {
+                 polygon.setMap(null);
+                 polygon = null;
+             }
+
+     }
+
+    function getPolygonCoords(shape) {
+            var coordinates = new Array();
+           // var coordinatesLog = new Array();
+
+           if (circle != null) {
+            circle.setMap(null);
+            circle = null;
+            }
+            if (polygon != null) {
+                 polygon.setMap(null);
+                 polygon = null;
+              }
+
+           polygon = shape;
+
+            if (polygon == null || (!(polygon instanceof google.maps.Polygon))) {
+                return;
+            } else {
+                var len = polygon.getPath().getLength();
+                for (var i = 0; i < len; i++) {
+                    coordinates.push(polygon.getPath().getAt(i).toUrlValue(5)+"::");
+
+                }
+
+                 Android.showPolygonCoordinates(coordinates);
+                   google.maps.event.addListener(polygon, 'dragend', updatePolygon);
+                   google.maps.event.addListener(polygon, 'click', updatePolygon);
+                   google.maps.event.addListener(polygon, 'set_at', updatePolygon);
+                   google.maps.event.addListener(polygon, 'insert_at', updatePolygon);
+                   google.maps.event.addListener(polygon, 'remove_at', updatePolygon);
+                return coordinates ;
+            }
+        }
+
+   function onCircleComplete(shape) {
+     if (shape == null || (!(shape instanceof google.maps.Circle))) return;
+
+        if (circle != null) {
+            circle.setMap(null);
+            circle = null;
+        }
+           if (polygon != null) {
+                 polygon.setMap(null);
+                 polygon = null;
+              }
+
+        circle = shape;
+        console.lng('radius', circle.getRadius());
+        console.lng('lat', circle.getCenter().lat());
+        console.lng('lng', circle.getCenter().lng());
+
+        Android.showToast(circle.getRadius()+','+circle.getCenter().lat()+','+circle.getCenter().lng()+","+'0')
+
+        // google.maps.event.addListener(circle, `center_changed`, updateCircle);
+         google.maps.event.addListener(circle, `radius_changed`, updateCircle);
+    }
+
+
+
+   function updateCircle() {
+
+                //Android.showDialog(circle.getRadius()+','+circle.getCenter().lat()+','+circle.getCenter().lng())
+
+                Android.showToast(circle.getRadius()+','+circle.getCenter().lat()+','+circle.getCenter().lng()+","+'1')
+
+                //$scope.isDelete = true;
+                //$scope.isReset = false;
+                //$scope.isSave = false;
+                //$scope.isUpdate = true;
+                //$scope.radius = circle.getRadius();
+                //$scope.lat = circle.getCenter().lat();
+                //$scope.long = circle.getCenter().lng();
+                //$scope.latString = "";
+                //$scope.longString = "";
+                //$scope.geofenceType = "circle";
+                //console.lng("petId:" + $scope.petId + "," + "Radius:" + $scope.radius + "," + "Lat:" + $scope.lat + "," + "Long:" + $scope.long);
+
+                //alert("center_changed")
+
+   }
+
+   function updatePolygon()
+         {
+
+            var coordinates = new Array();
+            if (polygon == null || (!(polygon instanceof google.maps.Polygon))) {
+                return;
+            } else {
+                var len = polygon.getPath().getLength();
+                for (var i = 0; i < len; i++) {
+                    coordinates.push(polygon.getPath().getAt(i).toUrlValue(5)+"::");
+
+                }
+                 Android.showPolygonCoordinates(coordinates);
+                 google.maps.event.addListener(polygon, 'dragend', updatePolygon);
+                 google.maps.event.addListener(polygon, 'click', updatePolygon);
+                 google.maps.event.addListener(polygon, 'set_at', updatePolygon);
+                 google.maps.event.addListener(polygon, 'insert_at', updatePolygon);
+                 google.maps.event.addListener(polygon, 'remove_at', updatePolygon);
+                return coordinates ;
+            }
+              //Android.showPolygonCoordinates(coordinates);
+         }
+
+
+
+
+   function deletefun(){
+
+      if (circle != null) {
+            circle.setMap(null);
+            circle = null;
+        }
+
+        if (polygon != null) {
+                 polygon.setMap(null);
+                 polygon = null;
+        }
+   }
+
+   function DrawCircle(rad1, lat11, log11) {
+
+               // rad *= red1;   //1600 convert to meters if in miles
+                if (circle != null) {
+                    circle.setMap(null);
+                }
+                 if (polygon != null) {
+                     polygon.setMap(null);
+                      polygon = null;
+                  }
+                circle = new google.maps.Circle({
+                //  center: { lat: $scope.circleLatitude, lng: $scope.circleLongitude },
+                 center: {lat: lat11, lng: log11},
+                    //center: center,
+                    radius: rad1,
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: "#FF0000",
+                    fillOpacity: 0.35,
+                    editable: true,
+
+                    map: map
+
+                });
+                 circle.setMap(map);
+                  map.fitBounds(circle.getBounds());
+
+
+                // google.maps.event.addListener(circle, `center_changed`, updateCircle);
+                 google.maps.event.addListener(circle, `radius_changed`, updateCircle);
+   }
+
+  function DrawPolygon(latStr1 , logStr1) {
+
+
+         //Android.showDialog(latStr1);
+
+
+        var triangleCoords =new Array();
+
+         var lat1 = latStr1.toString().split(',');
+         var log1 = logStr1.toString().split(',');
+
+          //  Android.showDialog(lat1.length);
+
+             for (var i = 0; i < lat1.length; i++) {
+
+               triangleCoords.push(new google.maps.LatLng(parseFloat(lat1[i]),parseFloat(log1[i])));
+           //   triangleCoords.push(lat: lat1[i] , lng: log1[i]);
+
+           }
+
+            // Construct the polygon.
+             polygon= new google.maps.Polygon({
+             paths: triangleCoords,
+             strokeColor: '#FF0000',
+             strokeOpacity: 0.8,
+             strokeWeight: 2,
+             fillColor: '#FF0000',
+             fillOpacity: 0.35,
+             editable: true,
+             draggable: true,
+             map: map
+          });
+           polygon.setMap(map);
+            google.maps.event.addListener(polygon, 'dragend', updatePolygon);
+            google.maps.event.addListener(polygon, 'click', updatePolygon);
+            google.maps.event.addListener(polygon, 'set_at', updatePolygon);
+            google.maps.event.addListener(polygon, 'insert_at', updatePolygon);
+            google.maps.event.addListener(polygon, 'remove_at', updatePolygon);
+            google.maps.event.addListener(polygon, 'mousedown', updatePolygon);
+            google.maps.event.addListener(polygon, 'mousemove', updatePolygon);
+            google.maps.event.addListener(polygon, 'mouseup', updatePolygon);
+
+   }
+    function GetPolygonListener()
+    {
+       var coordinates11 = new Array();
+       if (polygon == null || (!(polygon instanceof google.maps.Polygon))) {
+            return;
+       }
+       else {
+            var length = polygon.getPath().getLength();
+            for (var i = 0; i < length; i++) {
+                    coordinates11.push(polygon.getPath().getAt(i).toUrlValue(5)+"::");
+
+            }
+            Android.showPolygonCoordinates(coordinates11);
+        }
+    }
+
+
+
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGHsqLQqKwKsQGWCLdOzd34v_KhLbCY4c&libraries=drawing&callback=initMap"
+        async defer></script>
+
+</body>
+</html>
+
+
+<!--
+
+
+  function createfun(var r,var lat, var lng)
+             {
+                     var circle = new google.maps.Circle({
+                      map: map,
+                      clickable: false,
+                      editable: true,
+                      center: { lat: lat, lng: lng},
+                         radius: r,
+                      fillColor: '#A94442',
+                        strokeColor: '#A94442',
+                    });
+
+             }
+
+
+
+
+<html>
+<head>
+<style>
+body{
+background-color: #FA5858;
+color:#fff;
+}
+input{
+background-color: #F7D358;
+width: 300px;
+padding:10px;
+color: #000;
+}
+div#content{
+padding:20px;
+background-color: #F7D358;
+color: #000;
+}
+</style>
+<script type="text/javascript">
+    function showAndroidToast(toastmsg) {
+        Android.showToast(toastmsg);
+    }
+ function showAndroidDialog(dialogmsg) {
+        Android.showDialog(dialogmsg);
+    }
+ function moveToScreenTwo() {
+        Android.moveToNextScreen();
+    }
+</script>
+</head>
+<body>
+<center>
+<h3>Binding JavaScript code to Android code</h3>
+<div id="content">
+When developing a web application that's designed specifically for the WebView in your Android application, you can create interfaces between your JavaScript code and client-side Android code. For example, your JavaScript code can call a method in your Android code to display a Dialog, instead of using JavaScript's alert() function.
+</div>
+<div>
+Here are few examples:
+</div>
+<div>
+<input type="button" value="Make Toast" onClick="showAndroidToast('Toast made by Javascript :)')" /><br/>
+<input type="button" value="Trigger Dialog" onClick="showAndroidDialog('This dialog is triggered by Javascript :)')" /><br/>
+<input type="button" value="Take me to Next Screen" onClick="moveToScreenTwo()" />
+</div>
+</center>
+</body>
+</html>-->

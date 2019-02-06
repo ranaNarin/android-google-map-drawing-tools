@@ -1,0 +1,209 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <WebView
+
+        android:id="@+id/webview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linear1"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@android:drawable/ic_menu_compass"
+        android:visibility="gone" />
+
+    <LinearLayout
+
+        android:id="@+id/linear1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layoutSave"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/btnReSet"
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".40"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+
+                    android:padding="5dp"
+                    android:text="Reset" />
+                <!-- <Button
+                     android:id="@+id/btnReSet"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="save" />-->
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/geo_fenceName"
+
+                android:layout_width="0dp"
+
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="GeoFance Name"
+                android:singleLine="true" />
+
+            <LinearLayout
+                android:id="@+id/btncancel"
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".40"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:padding="5dp"
+                    android:text="Cancel" />
+                <!-- <Button
+
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="cancel" />-->
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnsave"
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight=".40"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Save" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutAddnew"
+
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/backIcon"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_launcher_background" />
+
+            <TextView
+                android:id="@+id/txtSites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GEO-FENCE SITES"
+
+                android:textSize="20dp" />
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end|center">
+
+                <Button
+                    android:id="@+id/addnewFence"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add a fence" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <ProgressBar
+            android:id="@+id/progress_barGet"
+            style="@android:style/Widget.ProgressBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dp"
+            android:visibility="gone" />
+
+
+        <LinearLayout
+
+            android:id="@+id/layout300"
+            android:layout_width="fill_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/txt300"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Auto GEO-FENCE 300'        "
+                android:textSize="20dp"
+
+                app:showText="false"
+
+                />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
